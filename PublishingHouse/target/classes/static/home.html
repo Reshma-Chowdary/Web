@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Your custom JavaScript file -->
+    <script src="script.js"></script>
+    <style>
+    	/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+
+/* Header styles */
+h1 {
+    margin-top: 20px;
+    color: #333;
+}
+
+/* Login options container styles */
+#login-options {
+    margin-top: 50px;
+}
+
+/* Option button styles */
+.option-button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+}
+
+.option-button:hover {
+    background-color: #0056b3;
+}
+
+/* Login form container styles */
+#login-form {
+    display: none;
+    background-color: #fff;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Login form heading styles */
+#login-form h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Form input styles */
+label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Submit button styles */
+#submit-login {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#submit-login:hover {
+    background-color: #0056b3;
+}
+    	
+        /* Your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #login-options {
+            margin-top: 50px;
+        }
+        .option-button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .option-button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login Page</h1>
+    <div id="login-options">
+        <button class="option-button" id="PublisherData">Get All Publishers Data</button>
+        <button class="option-button" id="GuestData">Get All Books Data</button>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Show the login form when "Login as Publisher" is clicked
+            $("#PublisherData").click(function() {
+            	window.location.href = "Publishers.html";
+            });
+
+            // Show the login form when "Login as Guest" is clicked
+            $("#GuestData").click(function() {
+            	window.location.href = "Books.html";
+            });
+            
+        });
+    </script>
+</body>
+</html>

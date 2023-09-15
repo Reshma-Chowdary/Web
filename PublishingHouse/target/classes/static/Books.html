@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTables Example with JSON Data</title>
+
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+    <table id="dataTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Publisher ID</th>
+                <th>Cost</th>
+                <th>Author</th>
+                <th>Update</th>
+                <th><button onclick="del()">Delete</button></th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- JSON data will be inserted here -->
+        </tbody>
+    </table>
+    <button id="add-button">Add Book</button>
+
+    <form id="add-book-form" style="display: none;" action="/add">
+        <label for="book-name">Book Name:</label>
+        <input type="text" id="book-name" name="book_name" required><br><br>
+
+        <label for="publisher-id">Publisher ID:</label>
+        <input type="number" id="publisher-id" name="pub_id" required><br><br>
+
+        <label for="book-cost">Book Cost:</label>
+        <input type="number" id="book-cost" name="book_cost" step="0.01" required><br><br>
+
+        <label for="book-author">Author:</label>
+        <input type="text" id="book-author" name="book_author" required><br><br>
+
+        <button type="submit">Add Book</button>
+    </form>
+    <!-- Update Book Form (hidden by default) -->
+<div id="update-book-form" style="display: none;">
+    <h2>Update Book</h2>
+    <form id="update-form" action="/update" method="POST">
+        <!-- Hidden input field to store the book ID -->
+        <input type="hidden" id="book-id" name="book_id">
+
+        <label for="book-name">Book Name:</label>
+        <input type="text" id="book-name" name="book_name" required><br><br>
+
+        <label for="publisher-id">Publisher ID:</label>
+        <input type="number" id="publisher-id" name="pub_id" required><br><br>
+
+        <label for="book-cost">Book Cost:</label>
+        <input type="number" id="book-cost" name="book_cost" step="0.01" required><br><br>
+
+        <label for="book-author">Author:</label>
+        <input type="text" id="book-author" name="book_author" required><br><br>
+
+        <button type="submit">Update Book</button>
+    </form>
+</div>
+    
+
+    <script>
+        $(document).ready(function () {
+        	var table;
+            // Sample JSON data (replace with your API endpoint)
+            $.ajax({
+                url: "/books", // Replace with your API URL
+                method: "GET",
+                success: function (jsonData) {
+                    $('#dataTable').DataTable({
+                        data: jsonData,
+                        columns: [
+                            { data: 'book_id' },
+                            { data: 'book_name' },
+                            { data: 'pub_id' },
+                            { data: 'book_cost' },
+                            { data: 'book_author' },
+                            {
+                                // Add a new column for the "update" button
+                                data: null,
+                                render: function (data, type, row) {
+                                    return '<button class="update-button">Update</button>';
+                                }
+                            }
+                        ],
+                        pageLength: 5
+                    });
+                },
+                error: function (error) {
+                    console.error("Error:", error);
+                }
+            });
+            $("#add-button").click(function () {
+                $("#add-book-form").toggle();
+            });
+
+            // Handle form submission
+            $("#add-book-form").submit(function (event) {
+                event.preventDefault(); // Prevent the default form submission
+                // ... (rest of the code for form submission)
+            });
+         // Handle the "update" button click event
+         // Handle the "update" button click event using event delegation
+            $('#dataTable tbody').on('click', '.update-button', function () {
+                // Get the data for the selected row
+                var data = table.row($(this).closest('tr')).data();
+
+                // Populate the form fields with the data
+                $('#update-book-form #book-id').val(data.book_id);
+                $('#update-book-form #book-name').val(data.book_name);
+                $('#update-book-form #publisher-id').val(data.pub_id);
+                $('#update-book-form #book-cost').val(data.book_cost);
+                $('#update-book-form #book-author').val(data.book_author);
+
+                
+                $('#update-book-form').show();
+            });
+
+            $("#update-form").submit(function (event) {
+                event.preventDefault(); 
+            });
+        });
+    </script>
+</body>
+
+</html>

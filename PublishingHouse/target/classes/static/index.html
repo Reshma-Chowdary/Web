@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>My Spring Boot Application</title>
+</head>
+
+<body>
+	<center>
+		<h1>Publishers</h1><br>
+		<label>id:</label><input type="text" id="no"><br>
+		<label>Name:</label><input type="text" id="dept"><br>
+		<label>Mobileno:</label><input type="text" id="job"><br>
+		
+		<br>
+		<button onclick="getPublishers()">GetAllPublishers</button>
+<br><br>
+		<table id="list" border="1px">
+			
+		</table>
+
+		<script>
+			
+			function getPublishers() {
+				
+				var a = new XMLHttpRequest();
+				a.open("GET", "/publishers", true);
+				a.send();
+				a.onreadystatechange = function () {
+					if (a.readyState === 4) { // Check if the request is complete
+						if (a.status === 200) {
+							var data = JSON.parse(a.responseText);
+							console.log(data);
+						
+
+							// Clear the existing table body
+							 
+							var table= document.getElementById("list");
+							table.innerHTML=``;
+							var tablebody= document.createElement("tbody");
+							var tablehead= document.createElement("thead");
+							var headers= document.createElement("th");
+							var row= document.createElement("tr");
+							var body = document.createElement('tr');
+							var td1 = document.createElement('th');
+							var td2 = document.createElement('th');
+							var td3 = document.createElement('th');
+							var td4 = document.createElement('th');
+							var td5 = document.createElement('th');
+							
+							td1.textContent="ID";
+							td2.textContent=" name";
+							td3.textContent=" mbl no";
+							td4.textContent=" show books";
+							td5.textContent="Update";
+							
+							row.appendChild(td1);
+							row.appendChild(td2);
+							row.appendChild(td3);
+							row.appendChild(td4);
+							row.appendChild(td5);
+							tablehead.appendChild(row);
+							table.append(tablehead);
+							
+						
+							
+				   
+
+							data.forEach(function (x) {
+								console.log(x);
+								var body = document.createElement('tr');
+								var td1 = document.createElement('td');
+								var td2 = document.createElement('td');
+								var td3 = document.createElement('td');
+								var td4 = document.createElement('button')
+								var td5 = document.createElement('button')
+								
+								td1.textContent =x.pub_id;
+								td2.textContent = x.pub_name;
+								td3.textContent = x.mbl_no;
+								td4.textContent = x.insr_insp_id;
+								td5.textContent = x.insr_yrly_prem_amount;
+								
+								td8.textContent = "Update";
+								td8.onclick = function () {
+
+								};
+
+				
+								body.appendChild(td1);
+								body.appendChild(td2);
+								body.appendChild(td3);
+								body.appendChild(td4);
+								body.appendChild(td5);
+								
+								tablebody.appendChild(body);
+								
+							});
+							table.append(tablebody);
+						}
+					}
+				}
+			}
+
+		</script>
+	</center>
+</body>
+
+</html>
