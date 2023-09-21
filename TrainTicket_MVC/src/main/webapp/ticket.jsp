@@ -1,3 +1,7 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="/WEB-INF/MyTagLib.tld" prefix="mytag"%>
+
 <!DOCTYPE html>
 <html>
 
@@ -8,26 +12,34 @@
 
 <body style="background-color: skyblue;">
 
-	<center>
-		<br>
-		<h1>
-			<u>TrainTicket Booking</u>
-		</h1>
-		<br> <label><b>From </b><select id="from">
-				<option>select</option>
-		</select></label> <label><b>To</b> <select id="to">
-				<option>select</option>
-		</select></label>
-		<button onclick="Search()">Search</button>
-		<br> <br> <label><b>Trains</b> <select id="Trains">
-				<option>select</option>
-		</select></label><br> <br> <label><b>class</b> <select id="class">
-				<option>select</option>
+<center><br>
+	<h1><u>TrainTicket Booking</u></h1><br> 
+	
+	<label><b>From </b></label>
+	
+	<mytag:index columnName="trn_start" tableName="MadhuStations" driver="org.postgresql.Driver" dbUrl="jdbc:postgresql://LocalHost:5432/LocalHost?user=postgres&password=PostGres@1"/>	
+	<label><b>To</b> </label>
+	<mytag:index columnName="trn_end" tableName="MadhuStations" driver="org.postgresql.Driver" dbUrl="jdbc:postgresql://LocalHost:5432/LocalHost?user=postgres&password=PostGres@1"/>	
+				
+	<button onclick="Search()">Search</button><br> <br> 
+	
+	<label><b>Trains</b></label>
+	<mytag:index columnName="trn_name" tableName="MadhuStations" driver="org.postgresql.Driver" dbUrl="jdbc:postgresql://LocalHost:5432/LocalHost?user=postgres&password=PostGres@1"/>	
+	
+	<div>
+        <label for="trains">Trains</label>
+        <select id="trains">
+            <tag:drop table="MadhuStations" trainno="trn_no" column="trn_name" dbUrl="jdbc:postgresql://LocalHost:5432/LocalHost?user=postgres&password=PostGres@1"  driver="org.postgresql.Driver"/>
+        </select>
+    </div>
+	
+	</label><br> <br> <label><b>class</b> <select id="class">
+				<option disabled selected>select</option>
 				<option>Ac</option>
 				<option>Sleeper</option>
 				<option>general</option>
 				<option>Top</option>
-		</select></label> <label> <b> Date :</b> <input type=date id="date"></input></label><br>
+		</select></label> <label> <b> Date :</b> <input type=date></input></label><br>
 		<h4>Passenger Details :</h4>
 		Sno : <input type="text" id=no><br> Name : <input
 			type="text" id=nam><br> Age : <input type="text" id=age><br>
@@ -36,8 +48,7 @@
 			<option value="female">Female</option>
 			<option value="other">Other</option>
 			<option selected disabled>select</option>
-		</select><br>
-		<br>
+		</select><br> <br>
 		<button onclick="add()">Add</button>
 		<br> <br>
 		<table border=1 style='border-collapse: collapse'>
@@ -56,32 +67,31 @@
 
 		<button onclick="book()">Book</button>
 		<button onclick="clear()">Clear</button>
-	</center>
+</center>
 	<script>
-		var sow = "";
 		var mad = new XMLHttpRequest();
 		mad.open('GET', 'TicketServlet', true);
 		mad.onreadystatechange = function() {
 			if (mad.status === 200 && mad.readyState === 4) {
 				const data = JSON.parse(mad.responseText);
-				Process(data);
+				//Process(data);
 			}
 		}
-		function Process(data) {
-			const from = document.getElementById('from');
-			data.forEach(function(item) {
-				const sel = document.createElement('option');
-				sel.textContent = item.from;
-				from.appendChild(sel);
-			})
+		/*		function Process(data) {
+		 const from = document.getElementById('from');
+		 data.forEach(function(item) {
+		 const sel = document.createElement('option');
+		 sel.textContent = item.from;
+		 from.appendChild(sel);
+		 })
 
-			const to = document.getElementById('to');
-			data.forEach(function(item) {
-				const sel = document.createElement('option');
-				sel.textContent = item.to;
-				to.appendChild(sel);
-			})
-		}
+		 const to = document.getElementById('to');
+		 data.forEach(function(item) {
+		 const sel = document.createElement('option');
+		 sel.textContent = item.to;
+		 to.appendChild(sel);
+		 })
+		 }*/
 		function Search() {
 			var from = document.getElementById("from").value;
 			var to = document.getElementById("to").value;
@@ -103,7 +113,6 @@
 				sel.textContent = item.train;
 				from.appendChild(sel);
 			})
-			
 		}
 		function add() {
 			var no = document.getElementById("no").value;
@@ -117,9 +126,9 @@
 					console.log("Added");
 
 				}
-			}
-			mad.send();
-			sow+="&no="+no+"&nam="+nam+"&age="+age+"&gen="+gen;
+			};
+			mad.send('no=' + no + '&name=' + nam + '&age=' + age + '&gen='
+					+ gen);
 			var db = document.getElementById("bd");
 			var tr = document.createElement("tr");
 			var td1 = document.createElement("td");
@@ -143,31 +152,13 @@
 			tr.appendChild(td4);
 			tr.appendChild(td5);
 			db.appendChild(tr);
-
+			clear();
 		}
 		function clear() {
 			document.getElementById("no").value = '';
 			document.getElementById("nam").value = '';
 			document.getElementById("age").value = '';
 			document.getElementById("gen").value = '';
-		}
-		function book() {
-			var from = document.getElementById("from").value;
-			var to = document.getElementById("to").value;
-			var train = document.getElementById("Trains").value;
-			var cla = document.getElementById("class").value;
-			var date = document.getElementById("date").value;
-			var tdata="?from="+from+"&to="+to+"&train="+train+"&class="+cla+"&date="+date
-			var mad = new XMLHttpRequest();
-			mad.open('Get', 'BookingServlet'+tdata+sow, true);
-			mad.onreadystatechange = function() {
-				if (mad.status === 200 && mad.readyState === 4) {
-					console.log("Added");
-					
-
-				}
-			}
-			mad.send();
 		}
 		mad.send();
 	</script>

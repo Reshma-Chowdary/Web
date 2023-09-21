@@ -53,4 +53,31 @@ public class StationDAL {
 		}
 		return ja;
 	}
+
+	public void setData(String[] no, String[] name, String[] age, String[] gen, String cla, String date, String from,
+			String to, String train) {
+		try {
+			System.out.println("reshma");
+			Class.forName("org.postgresql.Driver");
+			Connection c = DriverManager.getConnection(
+					"jdbc:postgresql://192.168.110.48:5432/plf_training?user=plf_training_admin&password=pff123");
+			PreparedStatement s = c.prepareStatement("Insert into trn_trains values(?,?,?,?,?)");
+			s.setString(1, from);
+			s.setString(2, to);
+			s.setString(3, train);
+			s.setString(4, cla);
+			s.setString(5, date);
+			s.execute();
+			for (int i = 0; i < no.length; i++) {
+				PreparedStatement ss = c.prepareStatement("Insert into trn_passenger values(?,?,?,?)");
+				ss.setString(1, no[i]);
+				ss.setString(2, name[i]);
+				ss.setString(3, age[i]);
+				ss.setString(4, gen[i]);
+				ss.execute();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
